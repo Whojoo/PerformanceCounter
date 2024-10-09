@@ -12,7 +12,7 @@ internal sealed class PerformanceCounter(
     LogLevel logLevel = LogLevel.Information)
     : IPerformanceCounter
 {
-    private const string HeaderMessage = "Starting performance counter {PerformanceCounterName}\n";
+    private const string HeaderMessage = "Reporting performance counter {PerformanceCounterName}\n";
 
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
     private readonly ILogger _logger = logger;
