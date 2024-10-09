@@ -14,6 +14,7 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
     // Create the counter, this automatically starts the counter and will log to Information
     var performanceCounter = PerformanceCounterFactory.StartDefault(logger, "Test");
 
+    // Record without returning a result
     performanceCounter.RecordStep("SyncRecordNoResult", () =>
     {
         foreach (var step in Enumerable.Range(1, 1_000_000))
@@ -22,6 +23,7 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
         }
     });
 
+    // Record and take the result which could be used at a later step if required
     var recordSyncResult = performanceCounter.RecordStep("SyncRecordWithResult", () =>
     {
         var returnResult = int.MaxValue;
@@ -33,6 +35,7 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
         return returnResult;
     });
 
+    // Supports async methods as well
     await performanceCounter.RecordStepAsync("AsyncRecordNoResult", async () =>
     {
         await Task.Delay(TimeSpan.FromMilliseconds(500));
@@ -46,6 +49,8 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
             return 500;
         });
 
+    // Report() or StopAndReport() to report all the performance details in a single
+    // structure log message.
     performanceCounter.StopAndReport();
 
     return recordAsyncResult + recordSyncResult;
