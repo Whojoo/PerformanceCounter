@@ -3,7 +3,13 @@ Simple .NET tool for recording and reporting performance for multipe steps
 
 ## Installation
 
-Soon(tm)
+Install the [PerformanceCounter NuGet Package](https://www.nuget.org/packages/Whojoo.PerformanceCounter)
+
+### .NET CLI
+
+```
+dotnet add package Whojoo.PerformanceCounter
+```
 
 ## Usage
 
