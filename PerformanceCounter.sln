@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{C0FAFC98-2E68-406B-9B89-F9F89F9827F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whojoo.PerformanceCounter.Sample1.Api", "samples\Whojoo.PerformanceCounter.Sample1.Api\Whojoo.PerformanceCounter.Sample1.Api.csproj", "{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +31,13 @@ Global
 		{19908E39-DA9D-4389-8ECB-A049808B5FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19908E39-DA9D-4389-8ECB-A049808B5FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19908E39-DA9D-4389-8ECB-A049808B5FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{19908E39-DA9D-4389-8ECB-A049808B5FC5} = {C679E56B-B64A-4504-90D9-2222ED4F1DD2}
+		{AA731F91-8A50-4BB1-97F1-ADE5ACE7EB0C} = {C0FAFC98-2E68-406B-9B89-F9F89F9827F8}
 	EndGlobalSection
 EndGlobal
