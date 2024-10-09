@@ -11,6 +11,7 @@ An example usage could be like the following, taking from one of the samples:
 ```csharp
 app.MapGet("/test", async (ILogger<Program> logger) =>
 {
+    // Create the counter, this automatically starts the counter and will log to Information
     var performanceCounter = PerformanceCounterFactory.StartDefault(logger, "Test");
 
     performanceCounter.RecordStep("SyncRecordNoResult", () =>
@@ -37,11 +38,13 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
         await Task.Delay(TimeSpan.FromMilliseconds(500));
     });
 
-    var recordAsyncResult = await performanceCounter.RecordStepAsync("AsyncRecordWithResult", async () =>
-    {
-        await Task.Delay(TimeSpan.FromMilliseconds(500));
-        return 500;
-    });
+    var recordAsyncResult = await performanceCounter.RecordStepAsync(
+        "AsyncRecordWithResult", 
+        async () =>
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
+            return 500;
+        });
 
     performanceCounter.StopAndReport();
 
