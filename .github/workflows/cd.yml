@@ -1,0 +1,58 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  semantic-release:
+    name: Create a Package Release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3 # Need the full commit history for conventional commit
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.0.x
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        dry_run: true
+    - name: Create a GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+    - name: Build app
+      run: dotnet build -C Release ./src/Whojoo.PerformanceCounter/Whojoo.PerformanceCounter.csproj
+    - name: Create Nuget Package
+      run: dotnet pack -c Release -p:PackageVersion=${{ steps.tag_version.outputs.new_version }} -o . ./src/Whojoo.PerformanceCounter/Whojoo.PerformanceCounter.csproj
+    - name: Upload Package for Publishing
+      uses: actions/upload-artifact@v3
+      with:
+        name: PackedLib
+        path: ./*.nupkg
+
+  # build:
+  #   needs: semantic-release
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
+  #   - name: Restore dependencies
+  #     run: dotnet restore src/Whojoo.PerformanceCounter
+  #   - name: Build
+  #     run: dotnet build src/Whojoo.PerformanceCounter --no-restore -c Release
+  #   - name: Pack
+  #     run: dotnet test --no-build --verbosity normal
