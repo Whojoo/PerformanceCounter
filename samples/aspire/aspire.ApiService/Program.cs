@@ -33,7 +33,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/test", async (ILogger<Program> logger) =>
 {
-    var performanceCounter = PerformanceCounterFactory.StartDefault(logger, "Test");
+    var performanceCounter = PerformanceCounterFactory.Start(logger);
 
     performanceCounter.RecordStep("SyncRecordNoResult", () =>
     {

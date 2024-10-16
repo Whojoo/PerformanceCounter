@@ -18,7 +18,7 @@ An example usage could be like the following, taking from one of the samples:
 app.MapGet("/test", async (ILogger<Program> logger) =>
 {
     // Create the counter, this automatically starts the counter and will log to Information
-    var performanceCounter = PerformanceCounterFactory.StartDefault(logger, "Test");
+    var performanceCounter = PerformanceCounterFactory.Start(logger);
 
     // Record without returning a result
     performanceCounter.RecordStep("SyncRecordNoResult", () =>
@@ -66,12 +66,12 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
 This produces the following result in the Console:
 ```
 info: Program[0]
-      Reporting performance counter Test
-      - Step SyncRecordNoResult: 6.6266 ms
-      - Step SyncRecordWithResult: 5.3808 ms
-      - Step AsyncRecordNoResult: 502.1223 ms
-      - Step AsyncRecordWithResult: 501.6494 ms
-      - Total elapsed: 1019,2913 ms
+      Reporting performance counter PerformanceTest
+      - Step SyncRecordNoResult: 8.8065 ms
+      - Step SyncRecordWithResult: 5.4439 ms
+      - Step AsyncRecordNoResult: 500.6646 ms
+      - Step AsyncRecordWithResult: 501.8499 ms
+      - Total elapsed: 1016,7649 ms
 ```
 
 And the following structured logging:
