@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspire.ServiceDefaults", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspire.Web", "samples\aspire\aspire.Web\aspire.Web.csproj", "{AEA7DF4F-882C-4D69-90BA-E246ABC471AE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C5956D23-11D6-43DF-974B-22B31BA16BFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whojoo.PerformanceCounter.Tests", "tests\Whojoo.PerformanceCounter.Tests\Whojoo.PerformanceCounter.Tests.csproj", "{D2524088-0644-4C37-A0DB-B81C3255C0F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +68,10 @@ Global
 		{AEA7DF4F-882C-4D69-90BA-E246ABC471AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA7DF4F-882C-4D69-90BA-E246ABC471AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA7DF4F-882C-4D69-90BA-E246ABC471AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2524088-0644-4C37-A0DB-B81C3255C0F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2524088-0644-4C37-A0DB-B81C3255C0F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2524088-0644-4C37-A0DB-B81C3255C0F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2524088-0644-4C37-A0DB-B81C3255C0F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{19908E39-DA9D-4389-8ECB-A049808B5FC5} = {C679E56B-B64A-4504-90D9-2222ED4F1DD2}
@@ -73,5 +81,6 @@ Global
 		{55A5AE4A-5A0E-462C-9B82-4916F421A20E} = {158AC92C-D143-4633-B89A-08A2C732FFD7}
 		{481C5AC4-A100-459D-934C-61AC80F9715F} = {158AC92C-D143-4633-B89A-08A2C732FFD7}
 		{AEA7DF4F-882C-4D69-90BA-E246ABC471AE} = {158AC92C-D143-4633-B89A-08A2C732FFD7}
+		{D2524088-0644-4C37-A0DB-B81C3255C0F1} = {C5956D23-11D6-43DF-974B-22B31BA16BFE}
 	EndGlobalSection
 EndGlobal
