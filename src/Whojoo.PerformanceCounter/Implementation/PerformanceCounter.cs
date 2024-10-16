@@ -23,6 +23,8 @@ internal sealed class PerformanceCounter(
     private readonly StringBuilder _logBuilder = new StringBuilder().Append(HeaderMessage);
     private readonly List<object[]> _arguments = [[performanceCounterName]];
 
+    private TimeSpan _totalElapsed = TimeSpan.Zero;
+
     /// <inheritdoc />
     public void RecordStep(string stepName, Action step)
     {
@@ -31,6 +33,8 @@ internal sealed class PerformanceCounter(
         var endElapsed = _stopwatch.Elapsed;
 
         var elapsed = endElapsed - startElapsed;
+
+        _totalElapsed += elapsed;
 
         _logBuilder.Append($"- Step {{{stepName}}}: {{{stepName}ElapsedMilliseconds}} ms\n");
 
@@ -45,6 +49,8 @@ internal sealed class PerformanceCounter(
         var endElapsed = _stopwatch.Elapsed;
 
         var elapsed = endElapsed - startElapsed;
+
+        _totalElapsed += elapsed;
 
         _logBuilder.Append($"- Step {{{stepName}}}: {{{stepName}ElapsedMilliseconds}} ms\n");
 
@@ -62,6 +68,8 @@ internal sealed class PerformanceCounter(
 
         var elapsed = endElapsed - startElapsed;
 
+        _totalElapsed += elapsed;
+
         _logBuilder.Append($"- Step {{{stepName}}}: {{{stepName}ElapsedMilliseconds}} ms\n");
 
         _arguments.Add([stepName, elapsed.TotalMilliseconds]);
@@ -75,6 +83,8 @@ internal sealed class PerformanceCounter(
         var endElapsed = _stopwatch.Elapsed;
 
         var elapsed = endElapsed - startElapsed;
+
+        _totalElapsed += elapsed;
 
         _logBuilder.Append($"- Step {{{stepName}}}: {{{stepName}ElapsedMilliseconds}} ms\n");
 
@@ -93,10 +103,8 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public void Report()
     {
-        var totalElapsed = _stopwatch.Elapsed;
-
-        _logBuilder.Append($"- Total elapsed: {totalElapsed.TotalMilliseconds} ms");
-        _arguments.Add([totalElapsed.TotalMilliseconds]);
+        _logBuilder.Append($"- Total elapsed: {_totalElapsed.TotalMilliseconds} ms");
+        _arguments.Add([_totalElapsed.TotalMilliseconds]);
 
         var messageFormat = _logBuilder.ToString();
         var arguments = _arguments.SelectMany(argumentArray => argumentArray).ToArray();
@@ -113,5 +121,6 @@ internal sealed class PerformanceCounter(
         _logBuilder.Clear().Append(HeaderMessage);
         _arguments.Clear();
         _arguments.Add([newPerformanceCounterName ?? _performanceCounterName]);
+        _totalElapsed = TimeSpan.Zero;
     }
 }
