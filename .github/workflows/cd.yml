@@ -37,6 +37,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         default_bump: false
+        tag_prefix: ''
         dry_run: 'true'
     - name: Temp test
       if: ${{ steps.tag_version.outputs.new_version == 'undefined' }}
