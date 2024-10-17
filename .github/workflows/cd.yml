@@ -5,6 +5,8 @@ name: CD
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
 #  test:
@@ -20,7 +22,7 @@ jobs:
 #      run: dotnet test tests/Whojoo.PerformanceCounter.Tests/Whojoo.PerformanceCounter.Tests.csproj
 
   semantic-release:
-    needs: test
+#    needs: test
     name: Create Release
     runs-on: ubuntu-latest
     steps:
