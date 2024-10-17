@@ -9,24 +9,44 @@ on:
     branches: [ "main" ]
 
 jobs:
-#  test:
-#    name: Test application
-#    runs-on: ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@v4
-#    - name: Setup .NET
-#      uses: actions/setup-dotnet@v4
-#      with:
-#        dotnet-version: 8.0.x
-#    - name: Test
-#      run: dotnet test tests/Whojoo.PerformanceCounter.Tests/Whojoo.PerformanceCounter.Tests.csproj
-
-  semantic-release:
-#    needs: test
-    name: Create Release
-    runs-on: ubuntu-latest
+  release-check:
+    name: Check if release is necessary
     outputs:
       publish_package: ${{ steps.should_release.outputs.should_release }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Dry run version check
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: false
+        tag_prefix: ''
+        dry_run: 'true'
+    - name: Mark if we should release or not
+      id: should_release
+      env:
+        SHOULD_RELEASE: ${{ steps.tag_version.outputs.new_version != null }}
+      run: echo "should_release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
+
+  test:
+    needs: release-check
+    if: needs.release-check.outputs.publish_package == 'true'
+    name: Test application
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Test
+      run: dotnet test tests/Whojoo.PerformanceCounter.Tests/Whojoo.PerformanceCounter.Tests.csproj
+
+  semantic-release:
+    needs: test
+    name: Create Release
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -39,31 +59,18 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         default_bump: false
-#        tag_prefix: ''
-        dry_run: 'true'
-    - name: Mark if we should release or not
-      id: should_release
-      env:
-        SHOULD_RELEASE: ${{ steps.tag_version.outputs.new_version != null }}
-      run: echo "should_release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
-    - name: Temp test
-      if: ${{ steps.tag_version.outputs.new_version == null }}
-      run: dotnet test ./tests/Whojoo.PerformanceCounter.Tests
+        tag_prefix: ''
     - name: Create a GitHub release
-      if: ${{ steps.tag_version.outputs.new_version != null }}
       uses: ncipollo/release-action@v1
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: Release ${{ steps.tag_version.outputs.new_tag }}
         body: ${{ steps.tag_version.outputs.changelog }}
     - name: Build app
-      if: ${{ steps.tag_version.outputs.new_version != null }}
       run: dotnet build -c Release ./src/Whojoo.PerformanceCounter/Whojoo.PerformanceCounter.csproj
     - name: Create Nuget Package
-      if: ${{ steps.tag_version.outputs.new_version != null }}
       run: dotnet pack -c Release -p:PackageVersion=${{ steps.tag_version.outputs.new_version }} -o . ./src/Whojoo.PerformanceCounter/Whojoo.PerformanceCounter.csproj
     - name: Upload Package for Publishing
-      if: ${{ steps.tag_version.outputs.new_version != null }}
       uses: actions/upload-artifact@v3
       with:
         name: PackedLib
@@ -71,17 +78,16 @@ jobs:
 
   nuget-publish:
     needs: semantic-release
-    if: needs.semantic-release.outputs.publish_package == 'true'
     name: Publish to Nuget
     runs-on: ubuntu-latest
     steps:
-#    - name: Download built project
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: PackedLib
+    - name: Download built project
+      uses: actions/download-artifact@v3
+      with:
+        name: PackedLib
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 8.0.x
-#    - name: Push Package to Nuget
-#      run: dotnet nuget push --api-key ${{secrets.NUGET_API_KEY}} --source "https://api.nuget.org/v3/index.json" *.nupkg
+    - name: Push Package to Nuget
+      run: dotnet nuget push --api-key ${{secrets.NUGET_API_KEY}} --source "https://api.nuget.org/v3/index.json" *.nupkg
