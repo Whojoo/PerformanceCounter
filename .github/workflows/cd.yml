@@ -44,7 +44,7 @@ jobs:
     - name: Mark if we should release or not
       id: should_release
       env:
-        SHOULD_RELEASE: ${{ steps.tag_version.outputs.new_version == null }}
+        SHOULD_RELEASE: ${{ steps.tag_version.outputs.new_version != null }}
       run: echo "should_release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
     - name: Temp test
       if: ${{ steps.tag_version.outputs.new_version == null }}
