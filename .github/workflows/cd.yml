@@ -13,6 +13,7 @@ jobs:
     name: Check if release is necessary
     outputs:
       publish_package: ${{ steps.should_release.outputs.should_release }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Dry run version check
