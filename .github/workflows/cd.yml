@@ -45,10 +45,10 @@ jobs:
       id: should_release
       env:
         SHOULD_RELEASE: ${{ steps.tag_version.outputs.new_version == null }}
-      run: echo "::set-output name=should_release::$SHOULD_RELEASE"
+      run: echo "should_release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
     - name: Temp test
       if: ${{ steps.tag_version.outputs.new_version == null }}
-      run: dotnet test
+      run: dotnet test ./tests/Whojoo.PerformanceCounter.Tests
     - name: Create a GitHub release
       if: ${{ steps.tag_version.outputs.new_version != null }}
       uses: ncipollo/release-action@v1
