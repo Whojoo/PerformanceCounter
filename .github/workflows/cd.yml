@@ -37,10 +37,10 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         default_bump: false
-        tag_prefix: ''
+#        tag_prefix: ''
         dry_run: 'true'
     - name: Temp test
-      if: ${{ steps.tag_version.outputs.new_version == 'undefined' }}
+      if: ${{ steps.tag_version.outputs.new_version == null }}
       run: dotnet test
 #    - name: Create a GitHub release
 #      uses: ncipollo/release-action@v1
