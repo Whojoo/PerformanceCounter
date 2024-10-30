@@ -52,7 +52,7 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
         return 500;
     });
 
-    performanceCounter.StopAndReport();
+    performanceCounter.Report();
 
     return recordAsyncResult + recordSyncResult;
 });

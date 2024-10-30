@@ -55,9 +55,8 @@ app.MapGet("/test", async (ILogger<Program> logger) =>
             return 500;
         });
 
-    // Report() or StopAndReport() to report all the performance details in a single
-    // structure log message.
-    performanceCounter.StopAndReport();
+    // Report() to report all the performance details in a single structure log message.
+    performanceCounter.Report();
 
     return recordAsyncResult + recordSyncResult;
 });
