@@ -37,12 +37,14 @@ public interface IPerformanceCounter
     Task<T> RecordStepAsync<T>(string stepName, Func<Task<T>> step);
 
     /// <summary>
-    /// Stops the timer and reports the monitored performance.
+    /// Reports the monitored performance.
+    /// If you record steps after this and StopAndReport() again, then you will re-report previous steps as well.
     /// </summary>
+    [Obsolete("Use Report instead, this will be removed in v2.")]
     void StopAndReport();
 
     /// <summary>
-    /// Reports the monitored performance without stopping the timer.
+    /// Reports the monitored performance.
     /// If you record steps after this and Report() again, then you will re-report previous steps as well.
     /// </summary>
     void Report();
