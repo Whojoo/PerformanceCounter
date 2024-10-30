@@ -9,21 +9,23 @@ namespace Whojoo.PerformanceCounter.Tests;
 internal class CustomTestLogger(
     ITestOutputHelper testOutputHelper,
     LoggerExternalScopeProvider scopeProvider,
-    string categoryName)
+    string categoryName,
+    LogLevel minimumEnabledLogLevel)
     : ILogger
 {
     private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
     private readonly LoggerExternalScopeProvider _scopeProvider = scopeProvider;
     private readonly string _categoryName = categoryName;
-    private readonly StringBuilder _producedLogsBuilder = new();
-
-    public string ProducedLogs => _producedLogsBuilder.ToString();
+    private readonly LogLevel _minimumEnabledLogLevel = minimumEnabledLogLevel;
 
     public static CustomTestLogger CreateLogger(ITestOutputHelper testOutputHelper) =>
-        new(testOutputHelper, new LoggerExternalScopeProvider(), string.Empty);
+        new(testOutputHelper, new LoggerExternalScopeProvider(), string.Empty, LogLevel.Trace);
 
     public static CustomTestLogger CreateLogger<T>(ITestOutputHelper testOutputHelper) =>
-        new CustomTestLogger<T>(testOutputHelper, new LoggerExternalScopeProvider());
+        CreateLogger<T>(testOutputHelper, LogLevel.Trace);
+
+    public static CustomTestLogger CreateLogger<T>(ITestOutputHelper testOutputHelper, LogLevel minimumAllowedLogLevel)
+        => new CustomTestLogger<T>(testOutputHelper, new LoggerExternalScopeProvider(), minimumAllowedLogLevel);
 
     public void Log<TState>(
         LogLevel logLevel,
@@ -57,7 +59,7 @@ internal class CustomTestLogger(
         _testOutputHelper.WriteLine(logBuilder.ToString());
     }
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel is not LogLevel.None;
+    public bool IsEnabled(LogLevel logLevel) => logLevel is not LogLevel.None && logLevel >= _minimumEnabledLogLevel;
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => _scopeProvider.Push(state);
 
@@ -76,7 +78,10 @@ internal class CustomTestLogger(
     }
 }
 
-internal class CustomTestLogger<T>(ITestOutputHelper testOutputHelper, LoggerExternalScopeProvider scopeProvider)
-    : CustomTestLogger(testOutputHelper, scopeProvider, typeof(T).FullName!), ILogger<T>
+internal class CustomTestLogger<T>(
+    ITestOutputHelper testOutputHelper,
+    LoggerExternalScopeProvider scopeProvider,
+    LogLevel minimumAllowedLogLevel)
+    : CustomTestLogger(testOutputHelper, scopeProvider, typeof(T).FullName!, minimumAllowedLogLevel), ILogger<T>
 {
 }

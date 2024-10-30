@@ -20,7 +20,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         // Act
         var performanceCounter = PerformanceCounterFactory.Start(_logger);
 
-        //Assert
+        // Assert
         performanceCounter
             .Should()
             .BeOfType<Implementation.PerformanceCounter>();
@@ -73,7 +73,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         // Act
         var performanceCounter = PerformanceCounterFactory.Start(_logger, options);
 
-        //Assert
+        // Assert
         performanceCounter
             .Should()
             .BeOfType<Implementation.NoopPerformanceCounter>();
@@ -93,7 +93,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         // Act
         var act = () => PerformanceCounterFactory.Start(_logger, options);
 
-        //Assert
+        // Assert
         act
             .Should()
             .Throw<ArgumentException>();
@@ -108,9 +108,40 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         // Act
         var performanceCounter = PerformanceCounterFactory.Start(_logger, options);
 
-        //Assert
+        // Assert
         performanceCounter
             .Should()
-        .BeOfType<Implementation.NoopPerformanceCounter>();
+            .BeOfType<Implementation.NoopPerformanceCounter>();
+    }
+
+    [Fact]
+    public void Start_WhenLogLevelIsEnabled_ShouldCreatePerformanceCounter()
+    {
+        // Arrange
+        var logger = CustomTestLogger
+            .CreateLogger<PerformanceCounterFactoryTests>(_testOutputHelper, LogLevel.Information);
+
+        // Act
+        var performanceCounter = PerformanceCounterFactory.Start(logger);
+
+        // Assert
+        performanceCounter
+            .Should()
+            .BeOfType<Implementation.PerformanceCounter>();
+    }
+
+    [Fact]
+    public void Start_WhenLogLevelIsDisabled_ShouldCreateNoopPerformanceCounter()
+    {
+        // Arrange
+        var logger = CustomTestLogger.CreateLogger<PerformanceCounterFactoryTests>(_testOutputHelper, LogLevel.Warning);
+
+        // Act
+        var performanceCounter = PerformanceCounterFactory.Start(logger);
+
+        // Assert
+        performanceCounter
+            .Should()
+            .BeOfType<Implementation.NoopPerformanceCounter>();
     }
 }

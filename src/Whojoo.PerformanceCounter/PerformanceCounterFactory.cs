@@ -18,7 +18,7 @@ public static class PerformanceCounterFactory
 
         options.ThrowIfInvalid();
 
-        if (!options.IsEnabled || options.LogLevel is LogLevel.None)
+        if (!options.IsEnabled || options.LogLevel is LogLevel.None || !logger.IsEnabled(options.LogLevel))
         {
             return new NoopPerformanceCounter();
         }
