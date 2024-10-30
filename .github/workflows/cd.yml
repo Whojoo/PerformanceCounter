@@ -51,7 +51,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Bump version and push tag
@@ -72,7 +72,7 @@ jobs:
     - name: Create Nuget Package
       run: dotnet pack -c Release -p:PackageVersion=${{ steps.tag_version.outputs.new_version }} -o . ./src/Whojoo.PerformanceCounter/Whojoo.PerformanceCounter.csproj
     - name: Upload Package for Publishing
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PackedLib
         path: ./*.nupkg
@@ -83,11 +83,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download built project
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: PackedLib
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Push Package to Nuget
