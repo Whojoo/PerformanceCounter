@@ -14,7 +14,6 @@ internal sealed class PerformanceCounter(
 {
     private const string HeaderMessage = "Reporting performance counter {PerformanceCounterName}\n";
 
-    private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
     private readonly ILogger _logger = logger;
 
     private readonly string _performanceCounterName = performanceCounterName;
@@ -28,11 +27,9 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public void RecordStep(string stepName, Action step)
     {
-        var startElapsed = _stopwatch.Elapsed;
+        var startElapsed = Stopwatch.GetTimestamp();
         step();
-        var endElapsed = _stopwatch.Elapsed;
-
-        var elapsed = endElapsed - startElapsed;
+        var elapsed = Stopwatch.GetElapsedTime(startElapsed);
 
         _totalElapsed += elapsed;
 
@@ -44,11 +41,9 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public T RecordStep<T>(string stepName, Func<T> step)
     {
-        var startElapsed = _stopwatch.Elapsed;
+        var startElapsed = Stopwatch.GetTimestamp();
         var result = step();
-        var endElapsed = _stopwatch.Elapsed;
-
-        var elapsed = endElapsed - startElapsed;
+        var elapsed = Stopwatch.GetElapsedTime(startElapsed);
 
         _totalElapsed += elapsed;
 
@@ -62,11 +57,9 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public async Task RecordStepAsync(string stepName, Func<Task> step)
     {
-        var startElapsed = _stopwatch.Elapsed;
+        var startElapsed = Stopwatch.GetTimestamp();
         await step();
-        var endElapsed = _stopwatch.Elapsed;
-
-        var elapsed = endElapsed - startElapsed;
+        var elapsed = Stopwatch.GetElapsedTime(startElapsed);
 
         _totalElapsed += elapsed;
 
@@ -78,11 +71,9 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public async Task<T> RecordStepAsync<T>(string stepName, Func<Task<T>> step)
     {
-        var startElapsed = _stopwatch.Elapsed;
+        var startElapsed = Stopwatch.GetTimestamp();
         var result = await step();
-        var endElapsed = _stopwatch.Elapsed;
-
-        var elapsed = endElapsed - startElapsed;
+        var elapsed = Stopwatch.GetElapsedTime(startElapsed);
 
         _totalElapsed += elapsed;
 
@@ -96,7 +87,6 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public void StopAndReport()
     {
-        _stopwatch.Stop();
         Report();
     }
 
@@ -117,7 +107,6 @@ internal sealed class PerformanceCounter(
     /// <inheritdoc />
     public void Restart(string? newPerformanceCounterName = null)
     {
-        _stopwatch.Restart();
         _logBuilder.Clear().Append(HeaderMessage);
         _arguments.Clear();
         _arguments.Add([newPerformanceCounterName ?? _performanceCounterName]);
