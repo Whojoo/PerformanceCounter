@@ -1,6 +1,7 @@
-using FluentAssertions;
 
 using Microsoft.Extensions.Logging;
+
+using Shouldly;
 
 using Xunit.Abstractions;
 
@@ -21,9 +22,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(_logger);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.PerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.PerformanceCounter>();
     }
 
     [Theory]
@@ -42,9 +41,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(_logger, options);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.PerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.PerformanceCounter>();
     }
 
     [Theory]
@@ -59,9 +56,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var act = () => PerformanceCounterFactory.Start(_logger, options);
 
         // Assert
-        act
-            .Should()
-            .Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -74,9 +69,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(_logger, options);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.NoopPerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.NoopPerformanceCounter>();
     }
 
     [Theory]
@@ -94,9 +87,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var act = () => PerformanceCounterFactory.Start(_logger, options);
 
         // Assert
-        act
-            .Should()
-            .Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -109,9 +100,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(_logger, options);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.NoopPerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.NoopPerformanceCounter>();
     }
 
     [Fact]
@@ -125,9 +114,7 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(logger);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.PerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.PerformanceCounter>();
     }
 
     [Fact]
@@ -140,8 +127,6 @@ public class PerformanceCounterFactoryTests(ITestOutputHelper testOutputHelper)
         var performanceCounter = PerformanceCounterFactory.Start(logger);
 
         // Assert
-        performanceCounter
-            .Should()
-            .BeOfType<Implementation.NoopPerformanceCounter>();
+        performanceCounter.ShouldBeOfType<Implementation.NoopPerformanceCounter>();
     }
 }
