@@ -81,6 +81,8 @@ jobs:
     needs: semantic-release
     name: Publish to Nuget
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
     - name: Download built project
       uses: actions/download-artifact@v4
@@ -90,5 +92,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: NuGet login (OIDC -> temp API key)
+      uses: Nuget/login@v1
+      id: login
+      with:
+        user: ${{secrets.NUGET_USER}}
     - name: Push Package to Nuget
-      run: dotnet nuget push --api-key ${{secrets.NUGET_API_KEY}} --source "https://api.nuget.org/v3/index.json" *.nupkg
+      run: dotnet nuget push --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source "https://api.nuget.org/v3/index.json" *.nupkg
